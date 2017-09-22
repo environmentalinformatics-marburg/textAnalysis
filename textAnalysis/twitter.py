@@ -1,32 +1,5 @@
 '''
-This script perfoms the basic process for applying a machine learning
-algorithm to a dataset using Python libraries.
-
-The four steps are:
-   1. Download a dataset (using pandas)
-   2. Process the numeric data (using numpy)
-   3. Train and evaluate learners (using scikit-learn)
-   4. Plot and compare results (using matplotlib)
-
-
-The data is downloaded from URL, which is defined below. As is normal
-for machine learning problems, the nature of the source data affects
-the entire solution. When you change URL to refer to your own data, you
-will need to review the data processing steps to ensure they remain
-correct.
-
-============
-Example Data
-============
-The example is from http://mlr.cs.umass.edu/ml/datasets/Water+Treatment+Plant
-It contains a range of continuous values from sensors at a water
-treatment plant, and the aim is to use unsupervised learners to
-determine whether the plant is operating correctly. See the linked page
-for more information about the data set.
-
-This script uses unsupervised clustering learners and dimensionality
-reduction models to find similar values, outliers, and visualize the
-classes.
+This script downloads twitter streams by keyword.
 '''
 
 import jsonpickle
