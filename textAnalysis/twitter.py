@@ -28,11 +28,11 @@ def set_twitter_api():
 
 # =====================================================================
 
-def retrieve_tweets(searchQuery, lat, lon, rad, filepath):
+def retrieve_tweets(searchQuery, lat, lon, rad, lang = "en", filepath=None):
     '''
     Retrieve tweets by search term and location
 
-    Script taken from https://www.karambelkar.info/2015/01/how-to-use-twitters-search-rest-api-most-effectively./
+    Script taken from "https://www.karambelkar.info/2015/01/how-to-use-twitters-search-rest-api-most-effectively./"
     '''
     location = ",".join([lat, lon, rad])
     maxTweets = 10000000
@@ -44,50 +44,50 @@ def retrieve_tweets(searchQuery, lat, lon, rad, filepath):
     print("Downloading max {0} tweets".format(maxTweets))
     with open(filepath, 'w') as f:
         while tweetCount < maxTweets:
-        try:
-            if (max_id <= 0):
-                if (not sinceId):
-                    new_tweets = api.search(q=searchQuery, geocode = location, count=tweetsPerQry)
-                else:
-                    new_tweets = api.search(q=searchQuery, geocode = location, count=tweetsPerQry,
+            try:
+                if (max_id <= 0):
+                    if (not sinceId):
+                        new_tweets = api.search(q=searchQuery, geocode = location, lang = lang, count=tweetsPerQry)
+                    else:
+                        new_tweets = api.search(q=searchQuery, geocode = location, lang = lang, count=tweetsPerQry,
                                             since_id=sinceId)
-            else:
-                if (not sinceId):
-                    new_tweets = api.search(q=searchQuery, geocode = location, count=tweetsPerQry,
-                                            max_id=str(max_id - 1))
                 else:
-                    new_tweets = api.search(q=searchQuery, geocode = location, count=tweetsPerQry,
+                    if (not sinceId):
+                        new_tweets = api.search(q=searchQuery, geocode = location, lang = lang, count=tweetsPerQry,
+                                            max_id=str(max_id - 1))
+                    else:
+                        new_tweets = api.search(q=searchQuery, geocode = location, lang = lang, count=tweetsPerQry,
                                             max_id=str(max_id - 1),
                                             since_id=sinceId)
-            if not new_tweets:
-                print("No more tweets found")
+                if not new_tweets:
+                    print("No more tweets found")
+                    break
+                for tweet in new_tweets:
+                    f.write(jsonpickle.encode(tweet._json, unpicklable=False) + '\n')
+                tweetCount += len(new_tweets)
+                print("Downloaded {0} tweets".format(tweetCount))
+                max_id = new_tweets[-1].id
+            except tweepy.TweepError as e:
+                # Just exit if any error
+                print("some error : " + str(e))
                 break
-            for tweet in new_tweets:
-                f.write(jsonpickle.encode(tweet._json, unpicklable=False) +
-                        '\n')
-            tweetCount += len(new_tweets)
-            print("Downloaded {0} tweets".format(tweetCount))
-            max_id = new_tweets[-1].id
-        except tweepy.TweepError as e:
-            # Just exit if any error
-            print("some error : " + str(e))
-            break
+    print ("Downloaded {0} tweets, Saved to {1}".format(tweetCount, filepath))
 
-print ("Downloaded {0} tweets, Saved to {1}".format(tweetCount, fName))
+
 
 
 
 # =====================================================================
-
+# Example related to Harvey
 if __name__ == '__main__':
     api = set_twitter_api()
 
-    searchQuery = "Gott"
-    lat = "50.119430" 
-    lon = "8.662655"
+    searchQuery = "(Harvey AND Jesus) OR (Harvey AND God) OR (Harvey AND Lord)"
+    lat = "35.275145" 
+    lon = "-80.872859"
     rad = "2000km"
-    filepath = "C:/Users/tnauss/permanent/dvlp/textAnalysis/tweets.txt"
-    retrieve_tweets(searchQuery, lat, lon, rad)
+    filepath = "C:/Users/tnauss/permanent/dvlp/textAnalysis/tweets_HJ_OR_HG_OR_HL.txt"
+    retrieve_tweets(searchQuery=searchQuery, lat=lat, lon=lon, rad=rad, filepath = filepath)
 
     tweets = []
     with open(filepath, "r") as f:
@@ -95,13 +95,11 @@ if __name__ == '__main__':
             tweets.append(jsonpickle.decode(line))
 
     tweets[1].keys()
+    tweets[1]["text"]
     tweets[1]["user"]["name"]
     tweets[1]["user"]["id"]
     tweets[1]["user"]["location"]
 
-    user_1 = api.get_user("mulrike")
-    user_1_2 = api.get_user("395456697")
-            
     for tweet in tweets:
         if tweet["lang"] == "de":
             print(tweet["text"])
