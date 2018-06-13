@@ -82,11 +82,11 @@ def retrieve_tweets(searchQuery, lat, lon, rad, lang = "en", filepath=None):
 if __name__ == '__main__':
     api = set_twitter_api()
 
-    searchQuery = "(Harvey AND Jesus) OR (Harvey AND God) OR (Harvey AND Lord)"
+    searchQuery = "(God) OR (Jesus) OR (Christ) OR (Gospel) OR (Worship) OR (Spirit) OR (Prayer) OR (Chruch) OR (Paptism) OR (Eucharist) OR (Sin) OR (Hell) OR (Devil) OR (Angels) OR (Miracle)"
     lat = "35.275145" 
     lon = "-80.872859"
     rad = "2000km"
-    filepath = "C:/Users/tnauss/permanent/dvlp/textAnalysis/tweets_HJ_OR_HG_OR_HL.txt"
+    filepath = "C:/Users/tnauss/permanent/dvlp/textAnalysis/tweets_GJCGWHPCPESHDAM.txt"
     retrieve_tweets(searchQuery=searchQuery, lat=lat, lon=lon, rad=rad, filepath = filepath)
 
     tweets = []
